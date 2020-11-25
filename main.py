@@ -22,27 +22,7 @@ xofblock = []
 varaibles = []
 
 
-class button():
-    def __init__(self, color, x, y, width, height, text=''):
-        self.color = color
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.text = text
 
-    def draw(self, win, outline=None):
-        # Call this method to draw the button on the screen
-        if outline:
-            pygame.draw.rect(win, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
-
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
-
-        if self.text != '':
-            font = pygame.font.SysFont('comicsans', 60)
-            text = font.render(self.text, 1, (0, 0, 0))
-            win.blit(text, (
-            self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
 class box():
     def __init__(self,x,l,win):
         self.x = x
@@ -116,16 +96,19 @@ while run:
     pygame.event.get()
     mouse = pygame.mouse.get_pos()
     press = pygame.mouse.get_pressed()
-    mousex = mouse[0] >0 and mouse[0] < 50
-    mousey = mouse[1] > 0 and mouse[1] < 50
+    mousexbubble = mouse[0] >0 and mouse[0] < 50
+    mouseybubble = mouse[1] > 0 and mouse[1] < 50
     click = press[0] == 1
 
-    if(mousex and mousey and click and clik == True):
+
+    font = pygame.font.SysFont('comicsans', 35)
+    text = font.render("Bubble Sort", 1, (0, 0, 0))
+    pygame.draw.rect(display,red, (0,0, 150, 40))
+    display.blit(text, (0, 0))
+    drawbox(display)
+    if (mousexbubble and mouseybubble and click and clik == True):
         bubblesort(count, varaibles)
         clik = False
-
-    pygame.draw.rect(display,red, (0,0, 50, 50))
-    drawbox(display)
 
     pygame.display.update()
 pygame.quit()
