@@ -85,6 +85,33 @@ def bubblesort(number,vari):
             except:
                 break
     print(actions)
+
+def selctionsort(number, vari):
+    global actions
+    actions = 0
+    numberoftries = 0
+    buffer = vari[0]
+    bufferid = 0
+    small = 100000000000
+    activelist = vari
+    for x in range(0,2):
+        small = activelist[0]
+        for p in activelist:
+            if(p.x == (bufferid*15)+50):
+                buffer = p
+        if(small != buffer):
+            print("if")
+            firstx = buffer.x
+            secondx = small.x
+            buffer.x = secondx
+            small.x = firstx
+            activelist.pop(activelist.index(small))
+
+
+
+
+
+    print(actions)
 run = True
 clik = True
 keys = pygame.key.get_pressed()
@@ -96,8 +123,8 @@ while run:
     pygame.event.get()
     mouse = pygame.mouse.get_pos()
     press = pygame.mouse.get_pressed()
-    mousexbubble = mouse[0] >0 and mouse[0] < 50
-    mouseybubble = mouse[1] > 0 and mouse[1] < 50
+    mousexbubble = mouse[0] >0 and mouse[0] < 150
+    mouseybubble = mouse[1] > 0 and mouse[1] < 40
     click = press[0] == 1
 
 
@@ -107,7 +134,7 @@ while run:
     display.blit(text, (0, 0))
     drawbox(display)
     if (mousexbubble and mouseybubble and click and clik == True):
-        bubblesort(count, varaibles)
+        selctionsort(count, varaibles)
         clik = False
 
     pygame.display.update()
