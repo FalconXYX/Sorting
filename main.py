@@ -8,6 +8,7 @@ import random
 import sorting
 global varaibles
 global display
+
 black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
@@ -60,6 +61,7 @@ pygame.init()
 def bubblesort(number,vari):
     global  actions
     actions = 0
+    now = time.time()
     numberoftries = 0
     for p in range (1,number):
         if (numberoftries == number):
@@ -83,35 +85,68 @@ def bubblesort(number,vari):
                     numberoftries +=1
 
             except:
+                print("It took: " + str(actions) + " actions to sort")
+                timetook = round(1000 * (time.time() - now), 3)
+                print("It took: " + str(timetook) + " milliseconds to sort ")
+                avg = round(timetook / actions, 6)
+                print("Each action took on average: " + str(avg) + " milliseconds")
                 break
     print(actions)
 
 def selctionsort(number, vari):
     global actions
+    now = time.time()
     actions = 0
     numberoftries = 0
     buffer = vari[0]
-    bufferid = 0
-    small = 100000000000
-    activelist = vari
-    for x in range(0,2):
-        small = activelist[0]
-        for p in activelist:
-            if(p.x == (bufferid*15)+50):
-                buffer = p
-        if(small != buffer):
-            print("if")
+    banned = []
+    small = box(1000,1000,display)
+
+    for x in range(1,1000):
+        rnum = random.randint(0, number-1)
+        rnum2 = random.randint(0, number-1)
+        temp = vari[rnum]
+        vari[rnum] = vari[rnum2]
+        vari[rnum2] = temp
+    activelist = vari.copy()
+    for b in range(0,55):
+        if(len(activelist) > 1):
+            actions += 1
+            for x in activelist:
+                if(small.h > x.h):
+                    small = x
+
+            for p in activelist:
+                if(p.x == (b*15)+50):
+                    buffer = p
+                    break
+
+
             firstx = buffer.x
             secondx = small.x
+
             buffer.x = secondx
             small.x = firstx
             activelist.pop(activelist.index(small))
+            small = box(1000, 1000, display)
+
+
+        else:
+            print("It took: "+ str(actions)+" actions to sort")
+            timetook = round(1000*(time.time()-now),3)
+            print("It took: "+str(timetook) +" milliseconds to sort ")
+            avg = round(timetook/actions,6)
+            print("Each action took on average: "+ str(avg) +" milliseconds")
+            break
 
 
 
 
 
-    print(actions)
+
+
+
+
 run = True
 clik = True
 keys = pygame.key.get_pressed()
