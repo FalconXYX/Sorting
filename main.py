@@ -30,10 +30,10 @@ class box():
         self.y = 50
         self.h = l
         self.w = 10
-        self.color = red
+        self.color = white
 
     def draw(self,win):
-        pygame.draw.rect(display, self.color, (self.x, self.y, self.w, self.h))
+        pygame.draw.rect(display, white, (self.x, self.y, self.w, self.h))
 def makevariables(xpos, lengths, numberofblocks, vari):
     for x in range(0,numberofblocks):
         l = (x*15)+50
@@ -42,6 +42,48 @@ def makevariables(xpos, lengths, numberofblocks, vari):
         lengths.append(l)
         vari.append(box(xposition,l,display))
 makevariables(xofblock, heightofblock, count, varaibles)
+class button():
+    def __init__(self,x,win, type):
+        self.x = x
+        self.type = type
+        self.clickedon = False
+
+
+
+    def draw(self,win):
+        pygame.draw.rect(display, red, (self.x, 0, 140, 40))
+        font = pygame.font.SysFont('comicsans', 35)
+        if (self.type == "b" ):
+            text = font.render("Bubble Sort", 1, (0, 0, 0))
+        if (self.type == "s"):
+            text = font.render("Selection", 1, (0, 0, 0))
+
+        display.blit(text, (self.x, 0))
+    def hit(self, c, v):
+        if(self.clickedon == False):
+            pygame.event.get()
+            mouse = pygame.mouse.get_pos()
+            keys = pygame.key.get_pressed()
+            press = pygame.mouse.get_pressed()
+            mousexbubble = mouse[0] > 0 and mouse[0] < 150
+            mousexselection = mouse[0] > 200 and mouse[0] < 350
+            mouseybubble = mouse[1] > 0 and mouse[1] < 40
+            click = press[0] == 1
+            if(self.type == "b" and mousexbubble and mouseybubble and click):
+                self.clickedon = True
+                bubblesort(c, v)
+
+            if(self.type == "s" and mousexselection and mouseybubble and click):
+                selctionsort(c, v)
+                self.clickedon = True
+
+def makevariables(xpos, lengths, numberofblocks, vari):
+    for x in range(0,numberofblocks):
+        l = (x*15)+50
+        xposition = (x * 15) + 50
+        xpos.append(xposition)
+        lengths.append(l)
+        vari.append(box(xposition,l,display))
 def radomize_order():
     random.shuffle(xofblock)
     for p in range(0, count):
@@ -53,6 +95,13 @@ def drawbox(win):
         varaibles[x].color = (255,255,255)
         varaibles[x].draw(win)
 
+def mixpos(varaible, numbers):
+    for x in range(1,1000):
+        rnum = random.randint(0, numbers-1)
+        rnum2 = random.randint(0, numbers-1)
+        temp = varaible[rnum]
+        varaible[rnum] = varaible[rnum2]
+        varaible[rnum2] = temp
 
 radomize_order()
 
@@ -85,29 +134,26 @@ def bubblesort(number,vari):
                     numberoftries +=1
 
             except:
-                print("It took: " + str(actions) + " actions to sort")
-                timetook = round(1000 * (time.time() - now), 3)
-                print("It took: " + str(timetook) + " milliseconds to sort ")
-                avg = round(timetook / actions, 6)
-                print("Each action took on average: " + str(avg) + " milliseconds")
+
                 break
+    print("It took: " + str(actions) + " actions to sort")
+    timetook = round(1000 * (time.time() - now), 3)
+    print("It took: " + str(timetook) + " milliseconds to sort ")
+    avg = round(timetook / actions, 6)
+    print("Each action took on average: " + str(avg) + " milliseconds")
+
     print(actions)
 
 def selctionsort(number, vari):
     global actions
-    now = time.time()
+
     actions = 0
     numberoftries = 0
     buffer = vari[0]
     banned = []
     small = box(1000,1000,display)
-
-    for x in range(1,1000):
-        rnum = random.randint(0, number-1)
-        rnum2 = random.randint(0, number-1)
-        temp = vari[rnum]
-        vari[rnum] = vari[rnum2]
-        vari[rnum2] = temp
+    mixpos(vari, number)
+    now = time.time()
     activelist = vari.copy()
     for b in range(0,55):
         if(len(activelist) > 1):
@@ -138,6 +184,16 @@ def selctionsort(number, vari):
             avg = round(timetook/actions,6)
             print("Each action took on average: "+ str(avg) +" milliseconds")
             break
+def buildheap(vari):
+    pass
+def heapwithsort(vari):
+    pass
+def heapsort(vari):
+    buildheap(vari)
+    for i in range(2,len(vari),) :
+        exchange A[1] < -> A[i]
+        heapsize = heapsize -1
+        heapwithsort(A, 1)
 
 
 
@@ -149,28 +205,23 @@ def selctionsort(number, vari):
 
 run = True
 clik = True
-keys = pygame.key.get_pressed()
+bbutton = button(0,display,"b")
+sbutton = button(200,display,"s")
 while run:
     display.fill((black))
     for event in pygame.event.get():
         if event.type ==pygame.QUIT:
             run  = False
-    pygame.event.get()
-    mouse = pygame.mouse.get_pos()
-    press = pygame.mouse.get_pressed()
-    mousexbubble = mouse[0] >0 and mouse[0] < 150
-    mouseybubble = mouse[1] > 0 and mouse[1] < 40
-    click = press[0] == 1
 
 
-    font = pygame.font.SysFont('comicsans', 35)
-    text = font.render("Bubble Sort", 1, (0, 0, 0))
-    pygame.draw.rect(display,red, (0,0, 150, 40))
-    display.blit(text, (0, 0))
+
+
     drawbox(display)
-    if (mousexbubble and mouseybubble and click and clik == True):
-        selctionsort(count, varaibles)
-        clik = False
+    bbutton.hit(count, varaibles)
+    sbutton.hit(count, varaibles)
+    bbutton.draw(display)
+    sbutton.draw(display)
+
 
     pygame.display.update()
 pygame.quit()
