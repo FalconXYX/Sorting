@@ -57,7 +57,8 @@ class button():
             text = font.render("Bubble Sort", 1, (0, 0, 0))
         if (self.type == "s"):
             text = font.render("Selection", 1, (0, 0, 0))
-
+        if (self.type == "h"):
+            text = font.render("Heap", 1, (0, 0, 0))
         display.blit(text, (self.x, 0))
     def hit(self, c, v):
         if(self.clickedon == False):
@@ -66,13 +67,16 @@ class button():
             keys = pygame.key.get_pressed()
             press = pygame.mouse.get_pressed()
             mousexbubble = mouse[0] > 0 and mouse[0] < 150
+            mousexheap = mouse[0] > 400 and mouse[0] < 550
             mousexselection = mouse[0] > 200 and mouse[0] < 350
             mouseybubble = mouse[1] > 0 and mouse[1] < 40
             click = press[0] == 1
             if(self.type == "b" and mousexbubble and mouseybubble and click):
                 self.clickedon = True
                 bubblesort(c, v)
-
+            if (self.type == "h" and mousexheap and mouseybubble and click):
+                self.clickedon = True
+                heapsort(v)
             if(self.type == "s" and mousexselection and mouseybubble and click):
                 selctionsort(c, v)
                 self.clickedon = True
@@ -184,16 +188,36 @@ def selctionsort(number, vari):
             avg = round(timetook/actions,6)
             print("Each action took on average: "+ str(avg) +" milliseconds")
             break
-def buildheap(vari):
-    pass
-def heapwithsort(vari):
-    pass
+
+
+def heapwithsort(vari, i, heapsize):
+    l = 2 * i + 1
+    r = 2 * i + 2
+    largest = i
+
+    if( l < heapsize and vari[largest].h < vari[l].h):
+        largest = l
+
+
+    if( r < heapsize and vari[largest].h < vari[r].h):
+        largest = r
+
+
+    if( largest != i):
+        vari[i].h, vari[largest].h = vari[largest].h, vari[i].h  # swap
+
+        heapwithsort(vari, i, largest)
 def heapsort(vari):
-    buildheap(vari)
-    for i in range(2,len(vari),) :
-        exchange A[1] < -> A[i]
-        heapsize = heapsize -1
-        heapwithsort(A, 1)
+
+    heapsize = len(vari)
+    for i in range(heapsize // 2 - 1, -1, -1):
+        heapwithsort(vari, heapsize, i)
+
+        # One by one extract elements
+    for i in range(heapsize - 1, 0, -1):
+        vari[i].h, vari[0].h = vari[0].h, vari[i].h  # swap
+        heapwithsort(vari, i, 0)
+
 
 
 
@@ -207,6 +231,7 @@ run = True
 clik = True
 bbutton = button(0,display,"b")
 sbutton = button(200,display,"s")
+hbutton = button(400,display,"h")
 while run:
     display.fill((black))
     for event in pygame.event.get():
@@ -218,8 +243,10 @@ while run:
 
     drawbox(display)
     bbutton.hit(count, varaibles)
+    hbutton.hit(1, varaibles)
     sbutton.hit(count, varaibles)
     bbutton.draw(display)
+    hbutton.draw(display)
     sbutton.draw(display)
 
 
